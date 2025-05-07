@@ -108,7 +108,7 @@ function App() {
   const gameIdRef = useRef(null);
 
 
-  const backendUrl = import.meta.env.VITE_BACKEND_BASE_URL || "http://localhost:3030";
+  const backendUrl = import.meta.env.VITE_BACKEND_BASE_URL || "https://poker-server-fnun.onrender.com";
   console.log('backendUrl', backendUrl);
 
   useEffect(() => {
