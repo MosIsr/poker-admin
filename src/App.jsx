@@ -108,12 +108,16 @@ function App() {
   const gameIdRef = useRef(null);
 
 
-  const backendUrl = import.meta.env.VITE_BACKEND_BASE_URL || "https://poker-server-fnun.onrender.com";
+  const backendUrl = import.meta.env.VITE_BACKEND_BASE_URL || "http://localhost:3030";
   console.log('backendUrl', backendUrl);
 
   useEffect(() => {
     
-    const socket = io(backendUrl);
+    // const socket = io(backendUrl);
+    const socket = io(backendUrl, {
+      withCredentials: true,
+      transports: ['websocket', 'polling']
+    });
     // const socket = io(process.env.REACT_APP_BACKEND_BASE_URL || "http://localhost:3030");
     socketRef.current = socket;
 
