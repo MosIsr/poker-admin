@@ -116,7 +116,11 @@ function App() {
     // const socket = io(backendUrl);
     const socket = io(backendUrl, {
       withCredentials: true,
-      transports: ['websocket', 'polling']
+      transports: ['websocket', 'polling'],
+      reconnection: true,
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000,
+      timeout: 20000
     });
     // const socket = io(process.env.REACT_APP_BACKEND_BASE_URL || "http://localhost:3030");
     socketRef.current = socket;
