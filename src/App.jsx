@@ -109,7 +109,6 @@ function App() {
 
 
   const backendUrl = import.meta.env.VITE_BACKEND_BASE_URL || "http://localhost:3030";
-  console.log('backendUrl', backendUrl);
 
   useEffect(() => {
     
@@ -122,7 +121,6 @@ function App() {
       reconnectionDelay: 1000,
       timeout: 20000
     });
-    // const socket = io(process.env.REACT_APP_BACKEND_BASE_URL || "http://localhost:3030");
     socketRef.current = socket;
 
     socket.on('connect', () => {
@@ -233,6 +231,7 @@ function App() {
                 <input
                   name='blind_time'
                   type='number'
+                  value={blindTime || ''}
                   className="border border-gray-500 h-8 w-[200px] flex items-center justify-center"
                   onChange={(e) => setBlindTime(+e.target.value)}
                 />
@@ -244,6 +243,7 @@ function App() {
                 <input
                   name='small_blind'
                   type='number'
+                  value={smallBlind || ''}
                   className="border border-gray-500 h-8 w-[200px] flex items-center justify-center"
                   onChange={(e) => setSmallBlind(+e.target.value)}
                 />
