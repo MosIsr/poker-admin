@@ -4,100 +4,6 @@ import { Header } from './components/Header';
 import { io } from 'socket.io-client';
 
 
-
-const players5 = [
-  {
-    id: "630fd8b6-7201-436c-bcf6-b27c54f752a1",
-    name: "Player 1",
-    amount: 0,
-    raiseAmount: 300,
-    allInAmount: 5000,
-    classNames: '-top-[40px] right-[120px]',
-    blindClassNames: 'top-[30px] right-[220px]',
-    isOnline: false,
-  },
-  {
-    id: "630fd8b6-7201-436c-bcf6-b27c54f752a2",
-    name: "Player 2",
-    amount: 0,
-    raiseAmount: 300,
-    allInAmount: 5000,
-    classNames: 'top-[80px] -right-[100px]',
-    blindClassNames: 'top-[110px] right-[60px]',
-    isOnline: false,
-  },
-  {
-    id: "630fd8b6-7201-436c-bcf6-b27c54f752a3",
-    name: "Player 3",
-    amount: 0,
-    raiseAmount: 300,
-    allInAmount: 5000,
-    classNames: 'bottom-[80px] -right-[100px]',
-    blindClassNames: 'bottom-[110px] right-[60px]',
-    isOnline: true,
-  },
-  {
-    id: "630fd8b6-7201-436c-bcf6-b27c54f752a4",
-    name: "Player 4",
-    amount: 0,
-    raiseAmount: 300,
-    allInAmount: 5000,
-    classNames: '-bottom-[30px] right-[120px]',
-    blindClassNames: 'bottom-[30px] right-[220px]',
-    isOnline: false,
-  },
-  {
-    id: "630fd8b6-7201-436c-bcf6-b27c54f752a5",
-    name: "Player 5",
-    amount: 0,
-    raiseAmount: 300,
-    allInAmount: 5000,
-    classNames: '-bottom-[60px] right-[350px]',
-    blindClassNames: 'bottom-[10px] right-[370px]',
-    isOnline: false,
-  },
-  {
-    id: "630fd8b6-7201-436c-bcf6-b27c54f752a6",
-    name: "Player 6",
-    amount: 0,
-    raiseAmount: 300,
-    allInAmount: 5000,
-    classNames: '-bottom-[30px] left-[120px]',
-    blindClassNames: 'bottom-[30px] left-[220px]',
-    isOnline: true,
-  },
-  {
-    id: "630fd8b6-7201-436c-bcf6-b27c54f752a7",
-    name: "Player 7",
-    amount: 0,
-    raiseAmount: 300,
-    allInAmount: 5000,
-    classNames: 'bottom-[80px] -left-[100px]',
-    blindClassNames: 'bottom-[110px] left-[60px]',
-    isOnline: false,
-  },
-  {
-    id: "630fd8b6-7201-436c-bcf6-b27c54f752a8",
-    name: "Player 8",
-    amount: 0,
-    raiseAmount: 300,
-    allInAmount: 5000,
-    classNames:  'top-[80px] -left-[100px]',
-    blindClassNames: 'top-[110px] left-[60px]',
-    isOnline: false,
-  },
-  {
-    id: "630fd8b6-7201-436c-bcf6-b27c54f752a9",
-    name: "Player 9",
-    amount: 0,
-    raiseAmount: 300,
-    allInAmount: 5000,
-    classNames: '-top-[40px] left-[120px]',
-    blindClassNames: 'top-[30px] left-[220px]',
-    isOnline: true,
-  },
-];
-
 function App() {
   const [players, setPlayers] = useState([]);
   const [hand, setHand] = useState(null);
@@ -108,7 +14,7 @@ function App() {
   const gameIdRef = useRef(null);
 
 
-  const backendUrl = import.meta.env.VITE_BACKEND_BASE_URL || "http://localhost:3030";
+  const backendUrl = import.meta.env.VITE_BACKEND_BASE_URL || "http://localhost:5050";
 
   useEffect(() => {
     
@@ -178,7 +84,8 @@ function App() {
         playerId,
         actionType,
         betAmount,
-      });
+      }
+    );
   };
 
 
@@ -191,6 +98,17 @@ function App() {
     console.log('data', data);
     
     socketRef.current?.emit('start-game', data);
+  }
+
+  const startNextHand = (winners) => {
+    socketRef.current?.emit(
+      'next-hand',
+      { 
+        gameId: gameIdRef.current,
+        handId: hand.id,
+        winners,
+      }
+    );
   }
 
   console.log('players', players);
@@ -211,6 +129,7 @@ function App() {
                 blindTime={blindTime}
                 level={level}
                 winnerPlayers={players.filter(item => item.is_active && item.action !== 'fold')}
+                startNextHand={startNextHand}
               />
             </div>
             <div className='w-full p-10 mt-10'>

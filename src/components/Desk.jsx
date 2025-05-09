@@ -1,6 +1,6 @@
 import Ellipse from '@/assets/ellipse.svg';
 import { Player } from './Player';
-import { Fragment, useState } from 'react';
+import { Fragment } from 'react';
 import { BlindStatuses } from './BlindStatuses';
 
 const playersClassNames = [
@@ -114,6 +114,7 @@ export const Desk = ({
                             allInAmount={+player.amount}
                             currentPlayerTurnId={currentPlayerTurnId}
                             setPlayerAction={(action, amount) => handlePlayerAction(hand.id, player.id, action, amount)}
+                            isShowCallButton={player.action_amount !== hand.current_max_bet}
                           />
                         </div>
                       )

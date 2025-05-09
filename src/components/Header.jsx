@@ -5,6 +5,7 @@ export const Header = ({
   blindTime,
   level,
   winnerPlayers,
+  startNextHand,
 }) => {
   const [winners, setWinners] = useState([]);
   console.log('winnerPlayers', winnerPlayers);
@@ -40,6 +41,12 @@ export const Header = ({
       setWinners([...winners, changedWinner]);
     } else {
       setWinners(changedWinners);
+    }
+  }
+
+  const handleNextHand = () => {
+    if(winners.length === winnerPlayers.length) {
+      startNextHand(winners)
     }
   }
   
@@ -99,6 +106,7 @@ export const Header = ({
         <button
           className="bg-[#00A54F] w-[200px] leading-[34px] p-4 rounded-md disabled:opacity-60"
           disabled={hand.current_round !== "Showdown"}
+          onClick={handleNextHand}
         >
           <p className="text-[36px]">Next Hand</p>
         </button>

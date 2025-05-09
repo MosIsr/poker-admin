@@ -13,6 +13,7 @@ export const Player = ({
   actionAmount,
   setPlayerAction,
   currentPlayerTurnId,
+  isShowCallButton,
 }) => {
   console.log('action', action);
   
@@ -47,6 +48,7 @@ export const Player = ({
             raiseAmount={raiseAmount}
             allInAmount={allInAmount}
             setPlayerAction={setPlayerAction}
+            isShowCallButton={isShowCallButton}
           />
         )
       }
@@ -60,6 +62,7 @@ const ActionModal = ({
   raiseAmount,
   allInAmount,
   setPlayerAction,
+  isShowCallButton = true,
 }) => {
   const [newRaiseAmount, setNewRaiseAmount] = useState(0);
 
@@ -80,12 +83,16 @@ const ActionModal = ({
       >
         <p>fold</p>
       </button>
-      <button
-        onClick={() => setPlayerAction('call', raiseAmount)}
-        className="bg-[#929398] w-[100px] h-8 flex items-center justify-center"
-      >
-        <p>call</p>
-      </button>
+      {
+        isShowCallButton && (
+          <button
+            onClick={() => setPlayerAction('call', raiseAmount)}
+            className="bg-[#929398] w-[100px] h-8 flex items-center justify-center"
+          >
+            <p>call</p>
+          </button>
+        )
+      }
       <button
         onClick={() => setPlayerAction('check')}
         className="bg-[#929398] w-[100px] h-8 flex items-center justify-center"
