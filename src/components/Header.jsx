@@ -46,7 +46,8 @@ export const Header = ({
 
   const handleNextHand = () => {
     if(winners.length === winnerPlayers.length) {
-      startNextHand(winners)
+      startNextHand(winners);
+      setWinners([]);
     }
   }
   
@@ -75,6 +76,10 @@ export const Header = ({
         <Item
           label='Pot'
           value={hand.pot_amount}
+        />
+        <Item
+          label='Ante'
+          value={hand.ante}
         />
         {
           hand.current_round === "Showdown" && (

@@ -46,6 +46,7 @@ export const Desk = ({
   players,
   hand,
   handlePlayerAction,
+  playerActions,
 }) => {
   return (
     <div className='w-full flex items-center justify-center'>
@@ -115,6 +116,7 @@ export const Desk = ({
                             currentPlayerTurnId={currentPlayerTurnId}
                             setPlayerAction={(action, amount) => handlePlayerAction(hand.id, player.id, action, amount)}
                             isShowCallButton={player.action_amount !== hand.current_max_bet}
+                            playerActions={playerActions}
                           />
                         </div>
                       )

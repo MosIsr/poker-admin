@@ -6,10 +6,11 @@ import { io } from 'socket.io-client';
 
 function App() {
   const [players, setPlayers] = useState([]);
+  const [playerActions, setPlayerActions] = useState({});
   const [hand, setHand] = useState(null);
   const [blindTime, setBlindTime] = useState(25);
   const [level, setLevel] = useState(1);
-  const [smallBlind, setSmallBlind] = useState(50);
+  const [playersChips, setPlayersChips] = useState(5000);
   const socketRef = useRef(null);
   const gameIdRef = useRef(null);
 
@@ -54,6 +55,7 @@ function App() {
         setHand(data.hand || null);
         setLevel(data.level);
         setBlindTime(data.blindTime);
+        setPlayerActions(data.playerActions || {})
       }
     });
 
@@ -61,6 +63,7 @@ function App() {
       console.log('game-update received:', data);
       setPlayers(data.players || []);
       setHand(data.hand || null);
+      setPlayerActions(data.playerActions || null);
       // Միգուցե թարմացնեք լեվելը և բլայնդի ժամանակը այստեղ, եթե դրանք նույնպես փոխվում են
     });
     
@@ -91,16 +94,19 @@ function App() {
 
 
   const handleStartGame = () => {
-    const data = {
-      blindTime,
-      smallBlind,
+    if(blindTime && playersChips) {
+      socketRef.current?.emit('start-game', {
+        blindTime,
+        playersChips,
+      });
     }
-    console.log('data', data);
-    
-    socketRef.current?.emit('start-game', data);
   }
 
   const startNextHand = (winners) => {
+    console.log('winners', winners);
+    console.log('gameIdRef.current', gameIdRef.current);
+    console.log('hand.id', hand.id);
+    
     socketRef.current?.emit(
       'next-hand',
       { 
@@ -137,6 +143,7 @@ function App() {
                 players={players}
                 hand={hand}
                 handlePlayerAction={handlePlayerAction}
+                playerActions={playerActions}
               />
             </div>
           </>
@@ -157,14 +164,14 @@ function App() {
               </div>
               <div className=" items-center text-2xl gap-3">
                 <div className="w-[150px]">
-                  <p>Small blind</p>
+                  <p>Players chips</p>
                 </div>
                 <input
-                  name='small_blind'
+                  name='players_chips'
                   type='number'
-                  value={smallBlind || ''}
+                  value={playersChips || ''}
                   className="border border-gray-500 h-8 w-[200px] flex items-center justify-center"
-                  onChange={(e) => setSmallBlind(+e.target.value)}
+                  onChange={(e) => setPlayersChips(+e.target.value)}
                 />
               </div>
               <button
