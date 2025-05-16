@@ -23,7 +23,7 @@ export const Player = ({
 
   }, [])
 
-  const classNames = [1, 2].includes(index) ? 'top-[80px] -left-[137px]' : '';
+  const classNames = [0].includes(index) ? '-top-[80px] left-[120px]' : [1, 2].includes(index) ? 'top-[24px] left-[120px]' : [6, 7].includes(index) ? 'top-[24px] -left-[250px]' : '';
   return (
     <div className={`relative w-[100px] ${ action === 'fold' ? 'opacity-60' : 'opacity-100'}`}>
       <div>
@@ -98,7 +98,7 @@ const ActionModal = ({
   
   return (
     <div
-      className={`absolute border border-gray-500 bg-[#D0D1D3] z-10 mt-1 p-3 space-y-2 ${classNames}`}
+      className={`absolute border border-gray-500 bg-custom-gray z-10 mt-1 p-3 space-y-2 ${classNames}`}
     >
       {
         playerActions.isCanFold && (
