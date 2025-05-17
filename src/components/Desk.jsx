@@ -100,9 +100,9 @@ export const Desk = ({
                       isSmallBlind={isSmallBlind}
                       isBigBlind={isBigBlind}
                     />
-                    {
-                      player.is_active && (
-                        <div className={`absolute ${classNames.classNames}`}>
+                    <div className={`absolute ${classNames.classNames}`}>
+                      {
+                        player.is_active ? (
                           <Player
                             index={index}
                             currentRound={hand.current_round}
@@ -118,9 +118,15 @@ export const Desk = ({
                             isShowCallButton={player.action_amount !== hand.current_max_bet}
                             playerActions={playerActions}
                           />
-                        </div>
-                      )
-                    }
+                        ) : (
+                          <div className={`relative w-[100px] opacity-60`}>
+                            <div>
+                              <p className="text-xl text-center">{player.name}</p>
+                            </div>
+                          </div>
+                        )
+                      }
+                    </div>
                   </Fragment>
                 )
               })
