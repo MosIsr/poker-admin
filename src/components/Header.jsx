@@ -101,7 +101,7 @@ export const Header = ({
                       <WinnersItem
                         key={player.id}
                         label={player.name}
-                        value={currentWinner?.amount || ''}
+                        value={currentWinner?.amount}
                         onChange={(value) => {
                           handleWinner(player.id, value);
                           if (!!winnersError) {
