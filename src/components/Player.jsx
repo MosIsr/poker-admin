@@ -16,14 +16,8 @@ export const Player = ({
   isShowCallButton,
   playerActions,
 }) => {
-  console.log('action', action);
-  
-
-  useEffect(() => {
-
-  }, [])
-
   const classNames = [0].includes(index) ? '-top-[80px] left-[120px]' : [1, 2].includes(index) ? 'top-[24px] left-[120px]' : [6, 7].includes(index) ? 'top-[24px] -left-[250px]' : '';
+
   return (
     <div className={`relative w-[100px] ${ action === 'fold' ? 'opacity-60' : 'opacity-100'}`}>
       <div>
@@ -46,20 +40,6 @@ export const Player = ({
         currentRound !== "Showdown" && currentPlayerTurnId && active && (
           <ActionModal
             playerActions={ playerActions }
-              // {
-              //   allInAmount: 52000,
-              //   betMinAmount: 50,
-              //   callAmount: 100,
-              //   isCanAllIn: true,
-              //   isCanBet: false,
-              //   isCanCall: true,
-              //   isCanCheck: false,
-              //   isCanFold: false,
-              //   isCanRaise: false,
-              //   isCanReRaise: true,
-              //   raiseMinAmount: 100,
-              // }
-            
             classNames={classNames}
             raiseAmount={raiseAmount}
             allInAmount={allInAmount}
@@ -76,13 +56,8 @@ export const Player = ({
 const ActionModal = ({
   playerActions,
   classNames,
-  raiseAmount,
-  allInAmount,
   setPlayerAction,
-  isShowCallButton = true,
-}) => {
-  console.log('playerActions========', playerActions);
-  
+}) => {  
   const [newBetAmount, setNewBetAmount] = useState(0);
   const [newRaiseAmount, setNewRaiseAmount] = useState(0);
   const [newReRaiseAmount, setNewReRaiseAmount] = useState(0);
@@ -93,9 +68,6 @@ const ActionModal = ({
     setNewReRaiseAmount(playerActions.raiseMinAmount);
   }, [playerActions]);
 
-  console.log('newRaiseAmount', newRaiseAmount);
-  
-  
   return (
     <div
       className={`absolute border border-gray-500 bg-custom-gray z-10 mt-1 p-3 space-y-2 ${classNames}`}
@@ -142,10 +114,18 @@ const ActionModal = ({
             <input
               name='bet'
               type='number'
-              value={playerActions.betMinAmount}
+              value={playerActions.betMinAmount || ''}
               min={playerActions.betMinAmount}
               max={playerActions.allInAmount}
               className="border border-gray-500 h-8 w-[100px] bg-[#D0D1D3] px-2 flex items-center justify-center text-center"
+              onBlur={(e) => {
+                if (e.target.value < playerActions.betMinAmount) {
+                  setNewRaiseAmount(playerActions.betMinAmount)
+                }
+                if (e.target.value > playerActions.allInAmount) {
+                  setNewRaiseAmount(playerActions.allInAmount)
+                }
+              }}
               onChange={(e) => setNewBetAmount(+e.target.value)}
             />
           </div>
@@ -163,10 +143,18 @@ const ActionModal = ({
             <input
               name='raise'
               type='number'
-              value={newRaiseAmount}
+              value={newRaiseAmount || ''}
               min={playerActions.raiseMinAmount}
               max={playerActions.allInAmount}
               className="border border-gray-500 h-8 w-[100px] bg-[#D0D1D3] px-2 flex items-center justify-center text-center"
+              onBlur={(e) => {
+                if (e.target.value < playerActions.raiseMinAmount) {
+                  setNewRaiseAmount(playerActions.raiseMinAmount)
+                }
+                if (e.target.value > playerActions.allInAmount) {
+                  setNewRaiseAmount(playerActions.allInAmount)
+                }
+              }}
               onChange={(e) => setNewRaiseAmount(+e.target.value)}
             />
           </div>
@@ -184,10 +172,18 @@ const ActionModal = ({
             <input
               name='re-raise'
               type='number'
-              value={newReRaiseAmount}
+              value={newReRaiseAmount || ''}
               min={playerActions.raiseMinAmount}
               max={playerActions.allInAmount}
               className="border border-gray-500 h-8 w-[100px] bg-[#D0D1D3] px-2 flex items-center justify-center text-center"
+              onBlur={(e) => {
+                if (e.target.value < playerActions.raiseMinAmount) {
+                  setNewReRaiseAmount(playerActions.raiseMinAmount)
+                }
+                if (e.target.value > playerActions.allInAmount) {
+                  setNewReRaiseAmount(playerActions.allInAmount)
+                }
+              }}
               onChange={(e) => setNewReRaiseAmount(+e.target.value)}
             />
           </div>

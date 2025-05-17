@@ -19,7 +19,6 @@ function App() {
 
   useEffect(() => {
     
-    // const socket = io(backendUrl);
     const socket = io(backendUrl, {
       withCredentials: true,
       transports: ['websocket', 'polling'],
@@ -50,7 +49,7 @@ function App() {
     socket.on('game-data', (data) => {
       console.log('game-data:', data);
       if (data && data.hand && data.hand.game_id) {
-        gameIdRef.current = data.hand.game_id; // Պահպանեք gameId-ն
+        gameIdRef.current = data.hand.game_id;
         setPlayers(data.players || []);
         setHand(data.hand || null);
         setLevel(data.level);
@@ -64,7 +63,6 @@ function App() {
       setPlayers(data.players || []);
       setHand(data.hand || null);
       setPlayerActions(data.playerActions || null);
-      // Միգուցե թարմացնեք լեվելը և բլայնդի ժամանակը այստեղ, եթե դրանք նույնպես փոխվում են
     });
     
 
@@ -74,11 +72,6 @@ function App() {
   }, []);
 
   const handlePlayerAction = (handId, playerId, actionType, betAmount) => {
-    console.log("Hand ID: ", handId);
-    console.log("Player ID: ", playerId);
-    console.log("Action type: ", actionType);
-    console.log("Bet amount: ", betAmount);
-
     socketRef.current?.emit(
       'player-action',
       { 
@@ -102,11 +95,7 @@ function App() {
     }
   }
 
-  const startNextHand = (winners) => {
-    console.log('winners', winners);
-    console.log('gameIdRef.current', gameIdRef.current);
-    console.log('hand.id', hand.id);
-    
+  const startNextHand = (winners) => {    
     socketRef.current?.emit(
       'next-hand',
       { 
@@ -117,15 +106,11 @@ function App() {
     );
   }
 
-  console.log('players', players);
-  console.log('hand', hand);
-  
   return (
     <div className='w-full h-full min-h-screen bg-[#D0D1D3] text-black pb-[230px]'>
       <div className='w-full h-18 flex justify-center items-center bg-gray-600'>
         <p className='text-[48px] text-white'>Administrator</p>
       </div>
-      
       {
         (hand && players) ? (
           <>

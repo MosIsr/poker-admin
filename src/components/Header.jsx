@@ -8,26 +8,8 @@ export const Header = ({
   startNextHand,
 }) => {
   const [winners, setWinners] = useState([]);
-  console.log('winnerPlayers', winnerPlayers);
-  console.log('hand.current_round', hand.current_round);
-
-  const handleWinner2 = (id, amount) => {
-    console.log('id, amount', id, amount);
-    
-    const changedWinner = { id, amount };
-    const changedWinners = winners.length ? winners.map(item => {
-      if(item.id === id) {
-        return changedWinner;
-      }
-      return item;
-    }) : changedWinner;
-
-    setWinners(changedWinners);
-  }
 
   const handleWinner = (id, amount) => {
-    console.log('id, amount', id, amount);
-
     const changedWinner = { id, amount };
     const changedWinners = winners.map(item => {
       if (item.id === id) {
@@ -36,7 +18,6 @@ export const Header = ({
       return item;
     });
 
-    // If the winner is not already in the winners array, add it
     if (!winners.some(item => item.id === id)) {
       setWinners([...winners, changedWinner]);
     } else {
