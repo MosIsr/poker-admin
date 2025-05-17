@@ -95,13 +95,14 @@ function App() {
     }
   }
 
-  const startNextHand = (winners) => {    
+  const startNextHand = (winners, gameLevel) => {    
     socketRef.current?.emit(
       'next-hand',
       { 
         gameId: gameIdRef.current,
         handId: hand.id,
         winners,
+        gameLevel,
       }
     );
   }

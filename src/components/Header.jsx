@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 export const Header = ({
   hand,
@@ -8,6 +8,22 @@ export const Header = ({
   startNextHand,
 }) => {
   const [winners, setWinners] = useState([]);
+  const [newLevel, setNewLevel] = useState(level);
+  const [winnersError, setWinnersError] = useState('');
+
+
+  useEffect(() => {
+    setNewLevel(level);
+  }, [level]);
+
+  useEffect(() => {
+    if (winnerPlayers?.length === 1) {
+      setWinners([{
+        id: winnerPlayers[0].id,
+        amount: +hand.pot_amount + +hand.ante,
+      }])
+    }
+  }, [winnerPlayers]);
 
   const handleWinner = (id, amount) => {
     const changedWinner = { id, amount };
@@ -26,8 +42,14 @@ export const Header = ({
   }
 
   const handleNextHand = () => {
+    const totalAmount = winners.reduce((sum, item) => sum + item.amount, 0);
+    const expectedTotal = +hand.pot_amount + +hand.ante;
+    if (totalAmount !== expectedTotal) {
+      setWinnersError('Please enter correct winner amounts');
+      return;
+    }
     if(winners.length === winnerPlayers.length) {
-      startNextHand(winners);
+      startNextHand(winners, newLevel);
       setWinners([]);
     }
   }
@@ -40,9 +62,12 @@ export const Header = ({
           value={blindTime}
           isMin
         />
-        <Item
+        <WinnersItem
           label='Level'
-          value={level}
+          classNames='w-[150px]'
+          minValue={1}
+          value={newLevel || ''}
+          onChange={setNewLevel}
         />
         <Item
           label='SB'
@@ -75,15 +100,24 @@ export const Header = ({
                     return (
                       <WinnersItem
                         key={player.id}
-                        id={player.id}
                         label={player.name}
-                        value={currentWinner?.amount}
-                        onChange={handleWinner}
+                        value={currentWinner?.amount || ''}
+                        onChange={(value) => {
+                          handleWinner(player.id, value);
+                          if (!!winnersError) {
+                            setWinnersError('');
+                          }
+                        }}
                       />
                     )
                   })
                 }
               </div>
+              {
+                !!winnersError && (
+                  <p className='text-red-500 text-xl'>{winnersError}</p>
+                )
+              }
             </div>
           )
         }
@@ -103,14 +137,15 @@ export const Header = ({
 }
 
 const WinnersItem = ({
-  id,
+  classNames,
   label,
+  minValue,
   value,
   onChange,
 }) => {
   return (
     <div className="flex items-center text-2xl gap-3">
-      <div className="w-[100px]">
+      <div className={`w-[100px] ${classNames}`}>
         <p>{label}</p>
       </div>
       <div className="items-center text-2xl gap-3">
@@ -118,8 +153,9 @@ const WinnersItem = ({
           name={label}
           type='number'
           value={value}
+          min={minValue}
           className="border border-gray-500 h-8 w-[100px] flex items-center justify-center"
-          onChange={(e) => onChange(id, +e.target.value)}
+          onChange={(e) => onChange(+e.target.value)}
         />
       </div>
     </div>
