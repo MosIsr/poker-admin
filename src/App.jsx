@@ -87,6 +87,8 @@ function App() {
 
 
   const handleStartGame = () => {
+    console.log('======== handle StartGame ============');
+    
     if(blindTime && playersChips) {
       socketRef.current?.emit('start-game', {
         blindTime,
