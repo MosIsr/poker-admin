@@ -58,9 +58,9 @@ const ActionModal = ({
   classNames,
   setPlayerAction,
 }) => {  
-  const [newBetAmount, setNewBetAmount] = useState(0);
-  const [newRaiseAmount, setNewRaiseAmount] = useState(0);
-  const [newReRaiseAmount, setNewReRaiseAmount] = useState(0);
+  const [newBetAmount, setNewBetAmount] = useState('');
+  const [newRaiseAmount, setNewRaiseAmount] = useState('');
+  const [newReRaiseAmount, setNewReRaiseAmount] = useState('');
 
   useEffect(() => {
     setNewBetAmount(playerActions.betMinAmount);
@@ -114,7 +114,7 @@ const ActionModal = ({
             <input
               name='bet'
               type='number'
-              value={playerActions.betMinAmount || ''}
+              value={newBetAmount || ''}
               min={playerActions.betMinAmount}
               max={playerActions.allInAmount}
               className="border border-gray-500 h-8 w-[100px] bg-[#D0D1D3] px-2 flex items-center justify-center text-center"
