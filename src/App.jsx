@@ -96,6 +96,8 @@ function App() {
   }
 
   const startNextHand = (winners, gameLevel) => {    
+    console.log('======== startNextHand ============');
+    
     console.log('winners, gameLevel', winners, gameLevel);
     
     socketRef.current?.emit(
