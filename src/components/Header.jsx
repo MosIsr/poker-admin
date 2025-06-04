@@ -5,9 +5,12 @@ export const Header = ({
   blindTime,
   level,
   winnerPlayers,
+  inActivePlayers,
   startNextHand,
+  onEndGame,
 }) => {
   const [winners, setWinners] = useState([]);
+  const [reBuyPlayers, setReBuyPlayers] = useState([]);
   const [newLevel, setNewLevel] = useState(level);
   const [winnersError, setWinnersError] = useState('');
 
@@ -22,6 +25,17 @@ export const Header = ({
         id: winnerPlayers[0].id,
         amount: +hand.pot_amount + +hand.ante,
       }])
+    } else {
+      const winnersData = [];
+      winnerPlayers.forEach(element => {
+        winnersData.push(
+          {
+            id: element.id,
+            amount: 0,
+          }
+        )
+      });
+      setWinners(winnersData);
     }
   }, [winnerPlayers]);
 
@@ -41,6 +55,16 @@ export const Header = ({
     }
   }
 
+  const handleReBuyChange = (playerId, value) => {
+    let data = [];
+    if(reBuyPlayers.includes(playerId)) {
+      data = reBuyPlayers.filter(player => player.id === playerId);
+    } else {
+      data = [ ...reBuyPlayers, playerId];
+    }
+    setReBuyPlayers(data);
+  }
+
   const handleNextHand = () => {
     const totalAmount = winners.reduce((sum, item) => sum + item.amount, 0);
     const expectedTotal = +hand.pot_amount + +hand.ante;
@@ -49,14 +73,17 @@ export const Header = ({
       return;
     }
     if(winners.length === winnerPlayers.length) {
-      startNextHand(winners, newLevel);
+      startNextHand(winners, newLevel, reBuyPlayers);
       setWinners([]);
+      setReBuyPlayers([]);
     }
   }
+
+  
   
   return (
-    <div className="flex w-full gap-16">
-      <div className="w-1/3 flex flex-col gap-2">
+    <div className="flex w-full gap-16 mb-10">
+      <div className="w-1/4 flex flex-col gap-2">
         <Item
           label='Blind time'
           value={blindTime}
@@ -78,7 +105,7 @@ export const Header = ({
           value={hand.big_blind_amount}
         />
       </div>
-      <div className="w-1/3 flex flex-col gap-2">
+      <div className="w-1/4 flex flex-col gap-2">
         <Item
           label='Pot'
           value={hand.pot_amount}
@@ -101,7 +128,7 @@ export const Header = ({
                       <WinnersItem
                         key={player.id}
                         label={player.name}
-                        value={currentWinner?.amount}
+                        value={currentWinner?.amount || 0}
                         onChange={(value) => {
                           handleWinner(player.id, value);
                           if (!!winnersError) {
@@ -122,16 +149,49 @@ export const Header = ({
           )
         }
       </div>
-      <div className="w-1/3 h-[100px] flex items-center gap-3">
-        <button
-          className="bg-[#00A54F] w-[200px] leading-[34px] p-4 rounded-md disabled:opacity-60"
-          disabled={hand.current_round !== "Showdown"}
-          onClick={handleNextHand}
-        >
-          <p className="text-[36px]">Next Hand</p>
-        </button>
-        <p className="text-[60px] leading-[60px] ">{hand.level}</p>
+      <div className="w-1/4 h-[100px] flex flex-col gap-3">
+        <div className=" h-[100px] flex items-center gap-3">
+          <button
+            className="bg-[#00A54F] w-[200px] leading-[34px] p-4 rounded-md disabled:opacity-60"
+            disabled={hand.current_round !== "Showdown"}
+            onClick={handleNextHand}
+          >
+            <p className="text-[36px]">Next Hand</p>
+          </button>
+          <p className="text-[60px] leading-[60px] ">{hand.level}</p>
+        </div>
+        <div className=" h-[100px] flex items-center">
+          <button
+            className="bg-red-500 w-[200px] leading-[34px] p-4 rounded-md"
+            onClick={onEndGame}
+          >
+            <p className="text-white text-[36px]">End Game</p>
+          </button>
+        </div>
       </div>
+      {
+        !!inActivePlayers?.length && (
+          <div className='w-1/4'>
+            <div className='mb-5'>
+              <p className='text-3xl'> Re Buy Players</p>
+            </div>
+            {
+              inActivePlayers.map((item) => {
+                const checked = reBuyPlayers.includes(item.id);
+
+                return (
+                  <ReBuyItem
+                    key={item.id}
+                    label={item.name}
+                    value={checked}
+                    onChange={(value) => handleReBuyChange(item.id, value)}
+                  />
+                )
+              })
+            }
+          </div>
+        )
+      }
     </div>
   )
 }
@@ -180,6 +240,28 @@ const Item = ({
           <p>min</p>
         )
       }
+    </div>
+  )
+}
+
+const ReBuyItem = ({
+  label,
+  value,
+  onChange,
+}) => {
+  return (
+    <div class="flex items-center mb-4">
+      <input
+        id="default-checkbox"
+        type="checkbox"
+        value={value}
+        onChange={(e) => onChange(e.target.checked)}
+        className="w-8 h-8 checked:bg-[#00A54F] text-[#00A54F] bg-gray-100 border-gray-300 rounded-sm focus:ring-green-500"
+      />
+      <label
+        htmlFor="default-checkbox"
+        className="ms-2 text-xl font-medium text-gray-900"
+      >{label}</label>
     </div>
   )
 }

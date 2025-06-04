@@ -19,7 +19,7 @@ export const Player = ({
   const classNames = [0].includes(index) ? '-top-[80px] left-[120px]' : [1, 2].includes(index) ? 'top-[24px] left-[120px]' : [6, 7].includes(index) ? 'top-[24px] -left-[250px]' : '';
 
   return (
-    <div className={`relative w-[100px] ${ action === 'fold' ? 'opacity-60' : 'opacity-100'}`}>
+    <div className={`relative w-[120px] ${ action === 'fold' ? 'opacity-60' : 'opacity-100'}`}>
       <div>
         <p className="text-xl text-center">{name}</p>
         <div className="border border-gray-500 h-8 min-w-[100px] flex items-center justify-center">

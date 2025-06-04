@@ -46,6 +46,21 @@ function App() {
       console.log('Update received:', data);
     });
 
+    socket.on('end-game-response', (data) => {
+      console.log('end-game-response:', data);
+      const { isEndedGame } = data;
+      if(isEndedGame) {
+        gameIdRef.current = null;
+        setPlayers([]);
+        setHand(null);
+        setLevel(1);
+        setBlindTime(25);
+        setPlayerActions({})
+      }
+    });
+
+    socket.emit('get-active-game');
+
     socket.on('game-data', (data) => {
       console.log('game-data:', data);
       if (data && data.hand && data.hand.game_id) {
@@ -84,8 +99,6 @@ function App() {
     );
   };
 
-
-
   const handleStartGame = () => {
     console.log('======== handle StartGame ============');
     
@@ -97,10 +110,8 @@ function App() {
     }
   }
 
-  const startNextHand = (winners, gameLevel) => {    
+  const startNextHand = (winners, gameLevel, reBuyPlayers) => {    
     console.log('======== startNextHand ============');
-    
-    console.log('winners, gameLevel', winners, gameLevel);
     
     socketRef.current?.emit(
       'next-hand',
@@ -109,7 +120,29 @@ function App() {
         handId: hand.id,
         winners,
         gameLevel,
+        reBuyPlayers,
       }
+    );
+  }
+
+  const handleReBuy = (playerId) => {
+    console.log('======== handleReBuy ============');
+    
+    socketRef.current?.emit(
+      'player-re-buy',
+      { 
+        gameId: gameIdRef.current,
+        handId: hand.id,
+        playerId
+      }
+    );
+  }
+  
+  const handleEndGame = () => {
+    console.log('======== handleEndGame ============');
+    socketRef.current?.emit(
+      'end-game',
+      { gameId: gameIdRef.current }
     );
   }
 
@@ -121,13 +154,15 @@ function App() {
       {
         (hand && players) ? (
           <>
-            <div className='max-w-[1110px] m-auto p-10'>
+            <div className='max-w-[1600px] m-auto p-10'>
               <Header
                 hand={hand}
                 blindTime={blindTime}
                 level={level}
                 winnerPlayers={players.filter(item => item.is_active && item.action !== 'fold')}
+                inActivePlayers={players.filter(item => !item.is_active)}
                 startNextHand={startNextHand}
+                onEndGame={handleEndGame}
               />
             </div>
             <div className='w-full p-10 mt-10'>
@@ -136,6 +171,7 @@ function App() {
                 hand={hand}
                 handlePlayerAction={handlePlayerAction}
                 playerActions={playerActions}
+                onReBuy={handleReBuy}
               />
             </div>
           </>

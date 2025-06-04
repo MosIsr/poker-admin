@@ -47,6 +47,7 @@ export const Desk = ({
   hand,
   handlePlayerAction,
   playerActions,
+  onReBuy,
 }) => {
   return (
     <div className='w-full flex items-center justify-center'>
@@ -83,6 +84,11 @@ export const Desk = ({
                     </>
                   ) : null 
                 }
+              </div>
+            </div>
+            <div className='w-[150px] absolute -top-24 left-1/2 -translate-x-1/2'>
+              <p className='text-[#00A54F] text-center text-3xl mb-2'>Dealer</p>
+              <div className='w-[150px] h-10 bg-[#00A54F]'>
               </div>
             </div>
             {
