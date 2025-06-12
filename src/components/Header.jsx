@@ -214,7 +214,7 @@ const WinnersItem = ({
           type='number'
           value={value}
           min={minValue}
-          className="border border-gray-500 h-8 w-[100px] flex items-center justify-center"
+          className="border border-gray-500 h-8 w-[100px] text-center pl-3 flex items-center justify-center"
           onChange={(e) => onChange(+e.target.value)}
         />
       </div>
