@@ -21,7 +21,7 @@ export const Player = ({
   return (
     <div className={`relative w-[120px] ${ action === 'fold' ? 'opacity-60' : 'opacity-100'}`}>
       <div>
-        <p className="text-xl text-center">{name}</p>
+        <p className={`text-xl text-center ${ active && action !== 'fold' ? 'text-[#00A54F] font-bold' : ''}`}>{name}</p>
         <div className="border border-gray-500 h-8 min-w-[100px] flex items-center justify-center">
           <p className="leading-none">{amount}</p>
         </div>
